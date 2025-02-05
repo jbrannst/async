@@ -1,0 +1,42 @@
+_format_version: "3.0"
+
+routes:
+- name: confluent
+  paths:
+  - /confluent
+  strip_path: true
+  plugins:
+  - name: confluent
+    config:
+      bootstrap_servers:
+      - host: pkc-z1o61.europe-west1.gcp.confluent.cloud
+        port: 9092
+      producer_async: false
+      topic: kafka-upstream
+      cluster_api_key: PWFDI2KRWBMF35VH
+      cluster_api_secret: Wf6d/dVLdK0+tS5cjzsqcCEcDgH6X3V6WfOQkix4WsrtQW6bfCWEGalQ5WO0GaGu
+  - name: request-transformer
+    config:
+      http_method: POST
+      add:
+        body:
+        - hello_from:$(headers["x-my-given-name"])
+        headers:
+        - content-type:application/json
+  - name: openid-connect
+    config:
+      issuer: https://accounts.google.com/.well-known/openid-configuration
+      client_id: 
+      - 582542661919-0r18m5avn3basv6i4r29163d86qhlajm.apps.googleusercontent.com
+      client_secret: 
+      - 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
+      redirect_uri:
+      - https://kong-e13f9c145cusp0dn2.kongcloud.dev/confluent
+      scopes: 
+      - openid
+      - email
+      - profile
+      upstream_headers_claims:
+      - given_name
+      upstream_headers_names:
+      - x-my-given-name
