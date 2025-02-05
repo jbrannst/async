@@ -23,6 +23,12 @@ routes:
         - hello_from:$(headers["x-my-given-name"])
         headers:
         - content-type:application/json
+  - name: rate-limiting-advanced
+    config:
+      limit:
+      - 5
+      window_size:
+      - 30
   - name: openid-connect
     config:
       issuer: https://accounts.google.com/.well-known/openid-configuration
